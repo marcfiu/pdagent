@@ -32,7 +32,7 @@ import logging
 import socket
 import time
 from ssl import CertificateError
-
+    
 from pdagent import http
 from pdagent.constants import ConsumeEvent, EVENTS_API_BASE
 from pdagent.pdqueue import EmptyQueueError
