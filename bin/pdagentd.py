@@ -98,6 +98,10 @@ agent_id_file = agent_config.get_agent_id_file()
 
 pidfile = os.path.join(pidfile_dir, 'pdagentd.pid')
 
+# set up HTTP proxy environment variables if defined in config
+for proxy in ["http_proxy","https_proxy"]:
+    if proxy in agent_config:
+        os.environ[proxy]=agent_config[proxy]
 
 # Check directories
 def _ensure_writable_directories(make_missing_dir, directories):
