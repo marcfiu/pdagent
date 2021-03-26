@@ -100,8 +100,8 @@ pidfile = os.path.join(pidfile_dir, 'pdagentd.pid')
 
 # set up HTTP proxy environment variables if defined in config
 for proxy in ["http_proxy","https_proxy"]:
-    if proxy in agent_config:
-        os.environ[proxy]=agent_config[proxy]
+    if proxy in main_config:
+        os.environ[proxy]=main_config[proxy]
 
 # Check directories
 def _ensure_writable_directories(make_missing_dir, directories):
@@ -288,6 +288,11 @@ def run():
             "Setting default socket timeout to %d" % default_socket_timeout
             )
         socket.setdefaulttimeout(default_socket_timeout)
+
+        # log the http_proxy setup
+        for proxy in ["http_proxy","https_proxy"]:
+            if proxy in os.environ:
+                main_logger.info("%s=%s" % (proxy,os.environ[proxy]))
 
         # Create tasks and task runner threads
         tasks = make_agent_tasks()
