@@ -1,13 +1,14 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 if [ -x "$(command -v python3)" ];
 then
-    python3 $DIR/pdagentd.py "$@"
-elif [ -x "$(command -v python2.7)" ]; 
+    PYTHON=python3
+elif [ -x "$(command -v python2.7)" ];
 then
-    python2.7 $DIR/pdagentd.py "$@"
+    PYTHON=python2.7
 else
-    python $DIR/pdagentd.py "$@"
+    PYTHON=python
 fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+${PYTHON} $DIR/pdagentd.py "$@"

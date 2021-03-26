@@ -40,8 +40,20 @@ uninstall_systemd () {
     systemctl disable pdagent
 }
 
-VERSION=`python -c "import platform; print platform.python_version()"`
-if [[ $VERSION == 2.7.* ]]; then
+if [ -x "$(command -v python3)" ];
+then
+    PYTHON=python3
+elif [ -x "$(command -v python2.7)" ];
+then
+    PYTHON=python2.7
+else
+    PYTHON=python
+fi
+
+VERSION=`${PYTHON} -c "import platform; print(platform.python_version())"`
+if [[ $VERSION == 3* ]]; then
+    INSTALL_PATH="/usr/lib/python3/site-packages/pdagent"
+elif [[ $VERSION == 2.7.* ]]; then
     INSTALL_PATH="/usr/lib/python2.7/site-packages/pdagent"
 else
     INSTALL_PATH="/usr/lib/python2.6/site-packages/pdagent"
@@ -50,7 +62,7 @@ fi
 if [ $1 -gt 0 ]; then # this is an upgrade
     : # no-op
 else # this is a remove
-    if which systemctl >/dev/null; then
+    if [ -x "$(command -v systemctl)" ]; then
         uninstall_systemd
     else
         uninstall_init

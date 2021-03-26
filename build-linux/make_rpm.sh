@@ -38,6 +38,7 @@ cd $basedir
 # source common variables
 . ./make_common.env
 
+mkdir -p $1
 mkdir -p $2
 
 if [ -z "$1" -o -z "$2" -o ! -d "$1" -o ! -d "$2" ]; then
@@ -56,11 +57,11 @@ fp=$(gpg --homedir $gpg_home --no-tty --lock-never --fingerprint | \
      head -n1 | \
      cut -d= -f2 | \
      tr -d ' ')
-cat >$HOME/.rpmmacros <<EOF
-%_signature gpg
-%_gpg_path $gpg_home
-%_gpg_name $fp
-EOF
+#cat >$HOME/.rpmmacros <<EOF
+#%_signature gpg
+#%_gpg_path $gpg_home
+#%_gpg_name $fp
+#EOF
 
 sh make_package.sh rpm
 

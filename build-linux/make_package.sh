@@ -29,6 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+set -x
 set -e  # fail on errors
 
 # source common variables
@@ -79,6 +80,7 @@ cp ../bin/pd-* data/usr/bin
 echo = ${DOCKER_WORKDIR}/bin
 mkdir -p data${DOCKER_WORKDIR}/bin
 cp ../bin/pdagentd.py data${DOCKER_WORKDIR}/bin
+cp ../bin/pdagentd data${DOCKER_WORKDIR}/bin
 chmod a+rx data${DOCKER_WORKDIR}/bin/pdagentd.py
 
 echo = /var/...
@@ -139,6 +141,7 @@ _SIGN_OPTS=""
 if [ "$pkg_type" = "rpm" ]; then
     _SIGN_OPTS="--rpm-sign"
 fi
+_SIGN_OPTS=""
 
 _POST_TRANS_OPT=""
 if [ "$pkg_type" = "rpm" ]; then
