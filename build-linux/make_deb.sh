@@ -40,11 +40,14 @@ cd $basedir
 
 mkdir -p $2
 
-if [ -z "$1" -o -z "$2" -o ! -d "$1" -o ! -d "$2" ]; then
-    echo "Usage: $0 {path-to-gpg-home} {path-to-package-installation-root}"
-    exit 2
+if [ -z "$1" -o -z "$2" ] ; then
+    if [ ! -d "$2" ]; then
+        echo "Usage: $0 {path-to-gpg-home} {path-to-package-installation-root}"
+        exit 2
+    fi
+else
+    [ -d "$1" ] && gpg_home="$1" || gpg_home=""
 fi
-gpg_home="$1"
 install_root="$2"
 deb_install_root=$install_root/deb
 [ -d "$deb_install_root" ] || mkdir -p $deb_install_root
@@ -73,11 +76,14 @@ APT {
 EOF
 apt-ftparchive -c /tmp/apt-ftparchive.conf release deb >Release
 mv Release deb/
-[ ! -e deb/Release.gpg ] || rm deb/Release.gpg
-gpg --homedir $gpg_home --lock-never \
-    --output deb/Release.gpg \
-    --digest-algo SHA256 \
-    --detach-sign --armor deb/Release
+
+if [ -z "${gpg_home}" ] ; then
+    [ ! -e deb/Release.gpg ] || rm deb/Release.gpg
+    gpg --homedir $gpg_home --lock-never \
+        --output deb/Release.gpg \
+        --digest-algo SHA256 \
+        --detach-sign --armor deb/Release
+fi
 
 echo "Local install-worthy repository created at: $deb_install_root"
 
