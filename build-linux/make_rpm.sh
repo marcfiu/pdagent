@@ -38,30 +38,33 @@ cd $basedir
 # source common variables
 . ./make_common.env
 
-mkdir -p $1
 mkdir -p $2
-
-if [ -z "$1" -o -z "$2" -o ! -d "$1" -o ! -d "$2" ]; then
-    echo "Usage: $0 {path-to-gpg-home} {path-to-package-installation-root}"
-    exit 2
+if [ -z "$1" -o -z "$2" ] ; then
+    if [ ! -d "$2" ]; then
+        echo "Usage: $0 {path-to-gpg-home} {path-to-package-installation-root}"
+        exit 2
+    fi
+else
+    [ -d "$1" ] && gpg_home="$1" || gpg_home=""
 fi
-gpg_home="$1"
 install_root="$2"
 rpm_install_root=$install_root/rpm
 [ -d "$rpm_install_root" ] || mkdir -p $rpm_install_root
 
-echo "Setting up GPG information for RPM..."
-# fingerprint to use for signing = first fingerprint in GPG keyring
-fp=$(gpg --homedir $gpg_home --no-tty --lock-never --fingerprint | \
-     grep '=' | \
-     head -n1 | \
-     cut -d= -f2 | \
-     tr -d ' ')
-#cat >$HOME/.rpmmacros <<EOF
-#%_signature gpg
-#%_gpg_path $gpg_home
-#%_gpg_name $fp
-#EOF
+if [ -n "${gpg_home}" ] ; then
+    echo "Setting up GPG information for RPM..."
+    # fingerprint to use for signing = first fingerprint in GPG keyring
+    fp=$(gpg --homedir $gpg_home --no-tty --lock-never --fingerprint | \
+        grep '=' | \
+        head -n1 | \
+        cut -d= -f2 | \
+        tr -d ' ')
+    cat >$HOME/.rpmmacros <<EOF
+%_signature gpg
+%_gpg_path $gpg_home
+%_gpg_name $fp
+EOF
+fi
 
 sh make_package.sh rpm
 
