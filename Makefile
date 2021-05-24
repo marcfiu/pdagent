@@ -12,7 +12,7 @@ centos: target/rpm target/tmp/GPG-KEY-RPM-pagerduty
 
 .PHONY: build-ubuntu
 build-ubuntu:
-	sudo docker build . \
+	docker build . \
 		-t pdagent-ubuntu \
 		-f Dockerfile-ubuntu \
 		--build-arg FPM_VERSION="${FPM_VERSION}" \
@@ -22,7 +22,7 @@ build-ubuntu:
 
 .PHONY: build-centos
 build-centos:
-	sudo docker build . \
+	docker build . \
 		-t pdagent-centos \
 		-f Dockerfile-centos-7 \
 		--build-arg FPM_VERSION="${FPM_VERSION}" \
@@ -31,25 +31,25 @@ build-centos:
 		--build-arg DOCKER_WORKDIR="${DOCKER_WORKDIR}"
 
 target/deb: build-ubuntu
-	sudo docker run \
+	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-ubuntu \
 			/bin/sh -c "/bin/sh build-linux/make_deb.sh ${DOCKER_WORKDIR}/build-linux/gpg-deb ${DOCKER_WORKDIR}/target"
 
 target/rpm: build-centos
-	sudo docker run \
+	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-centos \
 			/bin/sh -c "/bin/sh build-linux/make_rpm.sh ${DOCKER_WORKDIR}/build-linux/gpg-rpm ${DOCKER_WORKDIR}/target"
 
 target/tmp/GPG-KEY-pagerduty:
-	sudo docker run \
+	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-ubuntu \
 			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-deb > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-pagerduty"
 
 target/tmp/GPG-KEY-RPM-pagerduty:
-	sudo docker run \
+	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-centos \
 			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-rpm > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-RPM-pagerduty"
