@@ -139,9 +139,9 @@ _FPM_DEPENDS="--depends sudo"
 
 _SIGN_OPTS=""
 if [ "$pkg_type" = "rpm" ]; then
-    _SIGN_OPTS="--rpm-sign"
+    gpg_home=$2
+    [ -n "${gpg_home}" ] && _SIGN_OPTS="--rpm-sign"
 fi
-_SIGN_OPTS=""
 
 _POST_TRANS_OPT=""
 if [ "$pkg_type" = "rpm" ]; then

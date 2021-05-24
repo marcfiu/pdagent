@@ -66,7 +66,7 @@ if [ -n "${gpg_home}" ] ; then
 EOF
 fi
 
-sh make_package.sh rpm
+sh make_package.sh rpm ${gpg_home}
 
 echo "Creating an installable local package repository..."
 cp target/*.rpm $rpm_install_root/
