@@ -46,13 +46,13 @@ target/tmp/GPG-KEY-pagerduty:
 	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-ubuntu \
-			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-deb > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-pagerduty"
+			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; [ -d ${DOCKER_WORKDIR}/build-linux/gpg-deb ] && gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-deb > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-pagerduty"
 
 target/tmp/GPG-KEY-RPM-pagerduty:
 	docker run \
 		-v `pwd`:${DOCKER_WORKDIR} \
 		-it pdagent-centos \
-			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-rpm > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-RPM-pagerduty"
+			/bin/sh -c "mkdir -p ${DOCKER_WORKDIR}/target/tmp; [ -d ${DOCKER_WORKDIR}/build-linux/gpg-rpm ] && gpg --armor --export --homedir ${DOCKER_WORKDIR}/build-linux/gpg-rpm > ${DOCKER_WORKDIR}/target/tmp/GPG-KEY-RPM-pagerduty"
 
 .PHONY: test
 test:
