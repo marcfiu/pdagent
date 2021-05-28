@@ -3,11 +3,11 @@ Description=PagerDuty Agent
 After=network.target
 
 [Service]
-Type=simple
+Type=forking
 ExecStartPre=/bin/mkdir -p /var/run/pdagent
 ExecStartPre=/bin/chown -R pdagent:pdagent /var/run/pdagent
-ExecStart=/usr/share/pdagent/bin/pdagentd -f
-KillMode=process
+ExecStart=/usr/share/pdagent/bin/pdagentd
+KillMode=control-group
 TimeoutStopSec=15
 RestartSec=15
 User=pdagent
